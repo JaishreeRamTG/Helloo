@@ -130,7 +130,7 @@ if (strpos($message, '/start') !== false) {
 }
 
 
-$webhookResponse = file_get_contents($telegramAPI . 'setWebhook?url=mysticsilence.vercel.com WEBHOOK URL'); //put your webhook url
+$webhookResponse = file_get_contents($telegramAPI . 'setWebhook?url=mysticsilence.vercel.com'); //put your webhook url
 
 if ($webhookResponse) {
     echo "Webhook set successfully!";
