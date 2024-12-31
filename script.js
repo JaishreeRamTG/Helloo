@@ -35,20 +35,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Center image at top of the page */
-    .top-center-image {
-      width: 100%; /* Adjust width to 100% */
-      max-width: 100%; /* Ensure it doesn't exceed screen width */
-      height: auto;
-      display: block;
-      margin: 0 auto; /* Center the image horizontally */
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 10; /* Ensure it stays on top */
-    }
-
     /* Position for buttons */
     .social-buttons {
       position: fixed;
@@ -144,9 +130,6 @@
 <body>
 
   <div class="neon-background"></div>
-
-  <!-- Large Image at the Top Center -->
-  <img src="https://graph.org/file/75c9af1de907b9e6d8993-09449162d8e476ff44.jpg" alt="Top Center Image" class="top-center-image">
 
   <div class="social-buttons">
     <a href="javascript:void(0);" class="social-button" onclick="toggleModal('instagram-modal')">
