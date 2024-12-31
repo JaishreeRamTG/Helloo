@@ -1,200 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <title>Mass TempMail Generator</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url('http://telegra.ph/file/e7032a387a608932e09c5.jpg'); /* Add your background image URL here */
-            background-size: cover;
-            background-repeat: no-repeat;
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-        }
-
-        .container {
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent white background */
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-            overflow-x: auto;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .banner {
-            background-color: #007bff; 
-            color: white;
-            padding: 5px;
-        }
-
-        h1 {
-            color: #333;
-        }
-
-        table {
-            width: 100%;
-            height: 100%;
-            border-collapse: collapse;
-            max-width: 100%;
-        }
-
-        th, td {
-            padding: 5px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #007bff;
-            color: white;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        input, button {
-            padding: 5px;
-            display: block;
-            margin: 0 auto;
-        }
-
-        .btn-copy {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 3px 6px;
-            cursor: pointer;
-            display: inline-block;
-            margin-left: 5px;
-        }
-
-        footer {
-            text-align: center;
-            background-color: black;
-            color: white;
-            padding: 10px;
-            position: absolute;
-            width: 100%;
-            bottom: 0;
-        }
-
-        @media screen and (max-width: 768px) {
-            .container {
-                padding: 10px;
-            }
-
-            table {
-                font-size: 12px;
-            }
-
-            .btn-copy {
-                padding: 2px 4px;
-            }
-        }
-    </style>
+    <meta charset="utf-8">
+    <title>Fancy Text Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo" crossorigin="anonymous"></script>
 </head>
 <body>
-
-<div class="container">
-    <div class="banner">
-    	     <Center>
-        <h1>Mass TempMail Generator</h1>
-    </div>
-
-    <table border="1">
-        <tr>
-            <th>Login:</th>
-            <td><input type="text" id="inputMail" class="custom-search-input" placeholder="Enter your mail"></td>
-            <td colspan="3"><button id="checkButton" class="custom-search-botton btn-copy">Check</button></td>
-        </tr>
-        <tr>
-            <td colspan="5">&nbsp;</td>
-        </tr>
-
-        <?php
-        $count = $_GET['id'];
-        $default = 0;
-
-        if (!empty($count)) {
-            $default = 0 + $count;
-        }
-
-        if (!empty($count)) {
-
-            $url = "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=$count";
-            $json = file_get_contents($url);
-            $data = json_decode($json, true);
-
-        } else if ($count == NULL) {
-            $count = 1;
-            $url = "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=$count";
-            $json = file_get_contents($url);
-            $data = json_decode($json, true);
-
-        }
-
-        for ($i = 0; $i < $count; $i++) {
-            echo '<tr>';
-            echo '<th>Email:</th>';
-            echo '<td id="email-' . $i . '">' . $data[$i] . '</td>';
-            echo '<td><button class="btn-copy" data-clipboard-target="#email-' . $i . '">Copy</button></td>';
-            echo '<td><a href="./view.php?id=' . $data[$i] . '" target="_blank"><button class="btn-copy">Check Mail</button></a></td>';
-            echo '</tr>';
-        }
-        ?>
-
-        <tr>
-            <th>Mass:</th>
-            <td><input type="text" id="inMail" class="custom-search-input" placeholder="Example: 10"></td>
-            <td colspan="3"><button id="genMail" class="custom-search-botton btn-copy">Generate</button></td>
-        </tr>
-    </table>
-</div>
-
-<footer>
-    <div style="text-align: center;">
-        <a href="https://t.me/DEVSNP" target="_blank">
-            <button style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
-                Made by Nepcoder💌
-            </button>
-        </a>
-    </div>
-</footer>
-
-
-<audio id="myAudio">
-    <source src="./sound/copy.mp3" type="audio/mpeg">
-</audio>
-
-<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
-<script>
-    var audio = document.getElementById("myAudio");
-
-    document.getElementById('checkButton').onclick = function() {
-        window.location = "./view.php?id=" + document.getElementById('inputMail').value;
-        return false;
-    }
-
-    document.getElementById('genMail').onclick = function() {
-        window.location = "./?id=" + document.getElementById('inMail').value;
-        return false;
-    }
-
-    var clipboard = new ClipboardJS(".btn-copy");
-    clipboard.on("success", function(e) {
-        audio.play();
-        e.clearSelection();
-    });
-</script>
-
+    <header>
+        <div class="container">
+            <h1>Fancy Font Generator</h1>
+            <div class="your-text card-box">
+                <form>
+                    <input class="myinput" id="your-text" placeholder="Your Text Here">
+                </form>
+                <div id="results-link-field"></div>
+            </div>
+            <div class="thefancy card-box">
+                <div class="the-fancy-text" id="thefancy-text">
+                    <!-- Fancy text blocks -->
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝔢𝔫𝔱𝔢𝔯 𝔶𝔬𝔲𝔯 𝔰𝔱𝔶𝔩𝔦𝔰𝔥 𝔣𝔬𝔫𝔱 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝖊𝖓𝖙𝖊𝖗 𝖞𝖔𝖚𝖗 𝖘𝖙𝖞𝖑𝖎𝖘𝖍 𝖋𝖔𝖓𝖙 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>🍟🏆 𝕖ℕｔεⓡ 𝕪𝐎υг 𝓈ⓣ𝕐ｌⓘˢĤ ⓕσＮ𝕋 👍🐺 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝓮𝓷𝓽𝓮𝓻 𝔂𝓸𝓾𝓻 𝓼𝓽𝔂𝓵𝓲𝓼𝓱 𝓯𝓸𝓷𝓽 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝑒𝓃𝓉𝑒𝓇 𝓎𝑜𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻𝑜𝓃𝓉 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝕖𝕟𝕥𝕖𝕣 𝕪𝕠𝕦𝕣 𝕤𝕥𝕪𝕝𝕚𝕤𝕙 𝕗𝕠𝕟𝕥 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ｅｎｔｅｒ ｙｏｕｒ ｓｔｙｌｉｓｈ ｆｏｎｔ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>.•°¤*(¯`★´¯)*¤° 🎀 𝑒𝓃𝓉𝑒𝓇 𝓎💮𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻☯𝓃𝓉 🎀 °¤*)¯´★`¯(*¤°•. </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ᴇɴᴛᴇʀ ʏᴏᴜʀ ꜱᴛʏʟɪꜱʜ ꜰᴏɴᴛ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ʇuoɟ ɥsılʎʇs ɹnoʎ ɹǝʇuǝ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>🄴🄽🅃🄴🅁 🅈🄾🅄🅁 🅂🅃🅈🄻🄸🅂🄷 🄵🄾🄽🅃 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ƚᴎoᎸ ʜꙅi|ʏƚꙅ ɿuoʏ ɿɘƚᴎɘ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p class="ll" style="padding:50px 0;">e̸̻͇͈̥̯͐̐͆̂̉͛̏n̴̹͚̼̱͍͕͙͇̹͒́͊̔t̵̖̘̮̫̲̫͖͕̝̔̐̉͛̏̾̃̆̋͠ͅé̸̡̮̼̪̩̞͔ͅr̴̟̥̥͊ ̴͙̻̙̤̞̈̓͌͐̆̚ỹ̴̢̮͘ö̷̧̮̤̖̱͍̼̗͐̾̌͠ͅų̴̫͕̭̃ṙ̴̠͓̈ ̷̡͙̩͇̺͈̩͋̈́s̷̨̡̱̗̬̿̏̒̎̿͜ͅt̸͇͕̱͍̩̖͌̍̊̑͛̚̕͘͜ͅy̶̲͓͉̠͒̀l̸͈̹̫̝̃̈̓̍́̀ȉ̸̻͖̖̘͔̪̅͒͆͘s̸͚͆̇͆̋̾̀̚͠h̵̯̥́̍̉ ̸̢̛͎͔̲͕͈͚̑͒̉̌̈͘̕f̴̻̰̠͔̭̹̻͍̥͐͊̂͑̈́̌̾̈͠ͅȏ̷̖͑̐̅͛n̸̟̓t̵̪̎ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>🅴🅽🆃🅴🆁 🆈🅾🆄🆁 🆂🆃🆈🅻🅸🆂🅷 🅵🅾🅽🆃 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ₑₙₜₑᵣ yₒᵤᵣ ₛₜyₗᵢₛₕ fₒₙₜ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ᵉⁿᵗᵉʳ ʸᵒᵘʳ ˢᵗʸˡⁱˢʰ ᶠᵒⁿᵗ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ҽղէҽɾ վօմɾ ʂէվӀìʂհ ƒօղէ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>EᑎTEᖇ YOᑌᖇ ᔕTYᒪIᔕᕼ ᖴOᑎT </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ᘿᘉᖶᘿᖇ ᖻᓍᑘᖇ SᖶᖻᒪᓰSᕼ ᖴᓍᘉᖶ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e̶n̶t̶e̶r̶ ̶y̶o̶u̶r̶ ̶s̶t̶y̶l̶i̶s̶h̶ ̶f̶o̶n̶t̶ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e̴n̴t̴e̴r̴ ̴y̴o̴u̴r̴ ̴s̴t̴y̴l̴i̴s̴h̴ ̴f̴o̴n̴t̴ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e̷n̷t̷e̷r̷ ̷y̷o̷u̷r̷ ̷s̷t̷y̷l̷i̷s̷h̷ ̷f̷o̷n̷t̷ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e̲n̲t̲e̲r̲ ̲y̲o̲u̲r̲ ̲s̲t̲y̲l̲i̲s̲h̲ ̲f̲o̲n̲t̲ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e̳n̳t̳e̳r̳ ̳y̳o̳u̳r̳ ̳s̳t̳y̳l̳i̳s̳h̳ ̳f̳o̳n̳t̳ </p>
+                    </div>
+                  </div>
+                </div>
+                <div class="the-fancy-text" id="thefancy-text-two">
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ⓔⓝⓣⓔⓡ ⓨⓞⓤⓡ ⓢⓣⓨⓛⓘⓢⓗ ⓕⓞⓝⓣ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>єภՇєг ץ๏ยг รՇץɭเรђ Ŧ๏ภՇ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ҽɳƚҽɾ ყσυɾ ʂƚყʅιʂԋ ϝσɳƚ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ɛռȶɛʀ ʏօʊʀ ֆȶʏʟɨֆɦ ʄօռȶ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ᏋᏁᏖᏋᏒ ᎩᎧᏬᏒ ᏕᏖᎩᏝᎥᏕᏂ ᎦᎧᏁᏖ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ɛŋɬɛཞ ყơųཞ ʂɬყƖıʂɧ ʄơŋɬ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ēຖtēr ฯ໐นr ŞtฯliŞh f໐ຖt </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝐞𝐧𝐭𝐞𝐫 𝐲𝐨𝐮𝐫 𝐬𝐭𝐲𝐥𝐢𝐬𝐡 𝐟𝐨𝐧𝐭 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝘦𝘯𝘵𝘦𝘳 𝘺𝘰𝘶𝘳 𝘴𝘵𝘺𝘭𝘪𝘴𝘩 𝘧𝘰𝘯𝘵 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝙚𝙣𝙩𝙚𝙧 𝙮𝙤𝙪𝙧 𝙨𝙩𝙮𝙡𝙞𝙨𝙝 𝙛𝙤𝙣𝙩 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>𝚎𝚗𝚝𝚎𝚛 𝚢𝚘𝚞𝚛 𝚜𝚝𝚢𝚕𝚒𝚜𝚑 𝚏𝚘𝚗𝚝 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ΣПƬΣЯ YӨЦЯ ƧƬYᄂIƧΉ FӨПƬ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>єηтєя уσυя ѕтуℓιѕн ƒσηт </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>êñ†êr ¥ðµr §†¥lï§h £ðñ† </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>Ɇ₦₮ɆⱤ ɎØɄⱤ ₴₮ɎⱠł₴Ⱨ ₣Ø₦₮ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>乇几ㄒ乇尺 ㄚㄖㄩ尺 丂ㄒㄚㄥ丨丂卄 千ㄖ几ㄒ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>乇刀ｲ乇尺 ﾘのひ尺 丂ｲﾘﾚﾉ丂ん ｷの刀ｲ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>【e】【n】【t】【e】【r】 【y】【o】【u】【r】 【s】【t】【y】【l】【i】【s】【h】 【f】【o】【n】【t】 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>『e』『n』『t』『e』『r』 『y』『o』『u』『r』 『s』『t』『y』『l』『i』『s』『h』 『f』『o』『n』『t』 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>≋e≋n≋t≋e≋r≋ ≋y≋o≋u≋r≋ ≋s≋t≋y≋l≋i≋s≋h≋ ≋f≋o≋n≋t≋ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>░e░n░t░e░r░ ░y░o░u░r░ ░s░t░y░l░i░s░h░ ░f░o░n░t░ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>(っ◔◡◔)っ ♥ enter your stylish font ♥ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>ｅｎｔｅｒ　ｙｏｕｒ　ｓｔｙｌｉｓｈ　ｆｏｎｔ　越汚リこ,ｅｎｔｅｒ░ｙｏｕｒ░ｓｔｙｌｉｓｈ░ｆｏｎｔ　（越汚リこ）,【﻿ｅｎｔｅｒ　ｙｏｕｒ　ｓｔｙｌｉｓｈ　ｆｏｎｔ】</p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>˜”*°•.˜”*°• enter your stylish font •°*”˜.•°*”˜ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>[̲̅e][̲̅n][̲̅t][̲̅e][̲̅r] [̲̅y][̲̅o][̲̅u][̲̅r] [̲̅s][̲̅t][̲̅y][̲̅l][̲̅i][̲̅s][̲̅h] [̲̅f][̲̅o][̲̅n][̲̅t] </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e҉n҉t҉e҉r҉ ҉y҉o҉u҉r҉ ҉s҉t҉y҉l҉i҉s҉h҉ ҉f҉o҉n҉t҉ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e̾n̾t̾e̾r̾ ̾y̾o̾u̾r̾ ̾s̾t̾y̾l̾i̾s̾h̾ ̾f̾o̾n̾t̾ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e♥n♥t♥e♥r♥ ♥y♥o♥u♥r♥ ♥s♥t♥y♥l♥i♥s♥h♥ ♥f♥o♥n♥t </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e͎n͎t͎e͎r͎ ͎y͎o͎u͎r͎ ͎s͎t͎y͎l͎i͎s͎h͎ ͎f͎o͎n͎t͎ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>e͓̽n͓̽t͓̽e͓̽r͓̽ ͓̽y͓̽o͓̽u͓̽r͓̽ ͓̽s͓̽t͓̽y͓̽l͓̽i͓̽s͓̽h͓̽ ͓̽f͓̽o͓̽n͓̽t͓̽ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>Wingdings: ♏︎■︎⧫︎♏︎❒︎ ⍓︎□︎◆︎❒︎ ⬧︎⧫︎⍓︎●︎♓︎⬧︎♒︎ ♐︎□︎■︎⧫︎ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>🕊 ⋆ 🐥 🎀 𝑒𝓃𝓉𝑒𝓇 𝓎♡𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻❀𝓃𝓉 🎀 🐥 ⋆ 🕊 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>🐹 ⋆ 🐔 🎀 𝑒𝓃𝓉𝑒𝓇 𝓎☯𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻❤𝓃𝓉 🎀 🐔 ⋆ 🐹 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>¤¸¸.•´¯`•¸¸.•..>> 🎀 𝑒𝓃𝓉𝑒𝓇 𝓎💞𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻❀𝓃𝓉 🎀 >>..•.¸¸•`¯´•.¸¸¤ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>🐘 🎀 𝑒𝓃𝓉𝑒𝓇 𝓎☯𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻🌸𝓃𝓉 🎀 🐘 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>✧` 🎀 𝑒𝓃𝓉𝑒𝓇 𝓎🍬𝓊𝓇 𝓈𝓉𝓎𝓁𝒾𝓈𝒽 𝒻🌺𝓃𝓉 🎀 `✧ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>¸„.-•~¹°”ˆ˜¨ ᗴ𝐍Ⓣ𝓔Ｒ ㄚ𝓞υ𝔯 𝕤ⓣⓨ𝓛丨ｓ𝔥 𝔽ＯήＴ ¨˜ˆ”°¹~•-.„¸ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>♞🐣 ᵉ𝐧ｔ€𝐑 ｙ𝕆Ữｒ ร𝕥𝓎𝕝เŞ𝐡 ｆ𝐨Ň𝕥 🎁🎯 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>👮♙ ｅηⓣｅℝ 𝕪𝑜𝓤尺 𝕊Ŧｙ𝐥ιรʰ 𝓕ᗝＮＴ ☝🐤 </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>💢🍓 ｅŇｔєʳ ⓨ𝔬𝓊𝔯 𝓢tⓎ𝐥𝐢ş𝐇 ℱⓞή𝐓 ♨🐍 </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>░▒▓█►─═ 乇ⓝ𝐓乇𝐫 𝓨Ỗ𝕦𝔯 Ⓢ𝔱𝓨𝕝Ꭵ𝕤Ｈ ғ𝑜ᑎ𝓽 ═─◄█▓▒░ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>♞♔ 乇𝐍𝓽𝔼𝐑 ү𝕠υŘ ѕⓣ𝐘𝓁𝓲ร卄 ғⓄภ𝓽 🍪⛵ </p>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6 fancy-text aa">
+                      <p>☯🎅 𝐄ⓝŤẸ𝐫 𝐲σỮ尺 ѕt𝕐𝓛𝓘ร𝔥 ғⓄᶰŦ ♔♡ </p>
+                    </div>
+                    <div class="col-md-6 fancy-text aa">
+                      <p>👍👻 𝔢ᶰţ𝐄尺 ʸᵒＵ𝕣 丂𝔱𝕪𝐥𝒾𝓼Ｈ ᶠＯ𝐧ⓣ 👮♦ </p>
+                    </div>
+                    <!-- Add more fancy text blocks as needed -->
+                </div>
+            </div>
+        </div>
+    </header>
+    <script src="main.js"></script>
 </body>
 </html>
