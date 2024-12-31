@@ -72,6 +72,37 @@
     .social-button:hover img {
       transform: scale(1.2);
     }
+
+    /* Modal content */
+    .social-modal {
+      display: none;
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      padding: 20px;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: 10px;
+      color: white;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+      z-index: 101;
+      width: 300px;
+    }
+
+    .social-modal a {
+      display: block;
+      padding: 10px;
+      color: #fff;
+      text-decoration: none;
+      margin-bottom: 10px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 5px;
+      text-align: center;
+      transition: background 0.3s;
+    }
+
+    .social-modal a:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
   </style>
 </head>
 <body>
@@ -79,19 +110,54 @@
   <div class="neon-background"></div>
 
   <div class="social-buttons">
-    <a href="https://www.instagram.com/mysticxditor" target="_blank" class="social-button">
+    <a href="javascript:void(0);" class="social-button" onclick="toggleModal('instagram-modal')">
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png" alt="Instagram">
       Instagram
     </a>
-    <a href="https://wa.me/message/HTK2K4ZKFVQCD1" target="_blank" class="social-button">
+    <a href="javascript:void(0);" class="social-button" onclick="toggleModal('whatsapp-modal')">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
       WhatsApp
     </a>
-    <a href="https://t.me/mysticxditor" target="_blank" class="social-button">
+    <a href="javascript:void(0);" class="social-button" onclick="toggleModal('telegram-modal')">
       <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/1200px-Telegram_logo.svg.png" alt="Telegram">
       Telegram
     </a>
   </div>
+
+  <!-- Instagram Modal -->
+  <div id="instagram-modal" class="social-modal">
+    <a href="https://www.instagram.com/mysticxditor" target="_blank">Visit Instagram</a>
+    <a href="https://www.instagram.com/mysticxditor/stories" target="_blank">View Stories</a>
+  </div>
+
+  <!-- WhatsApp Modal -->
+  <div id="whatsapp-modal" class="social-modal">
+    <a href="https://wa.me/message/HTK2K4ZKFVQCD1" target="_blank">Chat on WhatsApp</a>
+    <a href="https://web.whatsapp.com" target="_blank">Open WhatsApp Web</a>
+  </div>
+
+  <!-- Telegram Modal -->
+  <div id="telegram-modal" class="social-modal">
+    <a href="https://t.me/mysticxditor" target="_blank">Visit Telegram Channel</a>
+    <a href="https://web.telegram.org" target="_blank">Open Telegram Web</a>
+  </div>
+
+  <script>
+    // Function to toggle the visibility of the modal
+    function toggleModal(modalId) {
+      var modal = document.getElementById(modalId);
+      // Hide all modals first
+      document.querySelectorAll('.social-modal').forEach(function(modal) {
+        modal.style.display = 'none';
+      });
+      // Toggle the selected modal
+      if (modal.style.display === 'block') {
+        modal.style.display = 'none';
+      } else {
+        modal.style.display = 'block';
+      }
+    }
+  </script>
 
 </body>
 </html>
