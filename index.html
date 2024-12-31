@@ -1,56 +1,140 @@
 <?php
-// Set the uploads directory
-$uploadDir = __DIR__ . '/uploads/';
+$botToken = '7551722305:AAFmA6ajU-ZWYUre7zjmm-IdxWc81JqUbbI'; 
+$telegramAPI = 'https://api.telegram.org/bot' . $botToken . '/';
 
-// Ensure the uploads directory exists
-if (!is_dir($uploadDir)) {
-    mkdir($uploadDir, 0777, true);
+// note replace All My Channel Username With Yours
+
+function isMember($chatID, $user_id) {
+    global $telegramAPI;
+    $check = json_decode(file_get_contents($telegramAPI . 'getChatMember?chat_id=@devsnp&user_id=' . $user_id), true);//replace All My Channel Username With Yours
+    return ($check['ok'] && ($check['result']['status'] === 'member' || $check['result']['status'] === 'administrator' || $check['result']['status'] === 'creator'));
 }
 
-// Check if the request method is POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Retrieve the file name and content from the POST data
-    $fileName = $_POST['fileName'] ?? '';
-    $content = $_POST['content'] ?? '';
+function getSongDetails($songName) {
+    $query = urlencode($songName);
+    $url = "https://music.apinepdev.workers.dev/?song=$query&page=1&limit=1";
 
-    // Ensure the file name is valid
-    if (empty($fileName) || !preg_match('/^[a-zA-Z0-9_-]+\.php$/', $fileName)) {
-        echo "Invalid file name.";
-        http_response_code(400);
-        exit;
+    $response = file_get_contents($url);
+    $data = json_decode($response, true);
+
+    if ($data && $data['status'] === "SUCCESS" && isset($data['data']['results'][0])) {
+        return $data['data']['results'][0];
+    } else {
+        return null;
     }
+}
 
-    // List of unsafe functions to check for
-    $unsafeFunctions = ['exec', 'system', 'shell_exec', 'passthru', 'eval', 'assert', 'preg_replace', 'create_function'];
+function downloadFile($url, $filePath) {
+    $file = fopen($filePath, 'w');
+    $ch = curl_init($url);
+    curl_setopt($ch, CURLOPT_FILE, $file);
+    curl_setopt($ch, CURLOPT_HEADER, 0);
+    curl_exec($ch);
+    curl_close($ch);
+    fclose($file);
+}
 
-    // Scan the content for unsafe functions
-    foreach ($unsafeFunctions as $function) {
-        if (preg_match("/\b$function\b/i", $content)) {
-            echo "The file contains potentially unsafe PHP code and cannot be uploaded.";
-            http_response_code(400);
-            exit;
+$update = json_decode(file_get_contents('php://input'), true);
+$message = $update['message']['text'];
+$chatID = $update['message']['chat']['id'];
+$userID = $update['message']['from']['id'];
+
+if (strpos($message, '/start') !== false) {
+    if (isMember($chatID, $userID)) {
+        $response = "Welcome! Please enter the name of the song you want to download.";
+        file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($response));
+
+       
+        $usersFile = 'users.json';
+        $existingUsers = [];
+
+        if (file_exists($usersFile)) {
+            $existingUsers = json_decode(file_get_contents($usersFile), true);
         }
+
+        if (!in_array($userID, $existingUsers)) {
+            $existingUsers[] = $userID;
+            file_put_contents($usersFile, json_encode($existingUsers));
+        }
+    } else {
+        $joinMessage = "To access music downloads, join our channel: https://t.me/devsnp ";
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => 'Join @devsnp', 'url' => 'https://t.me/devsnp']
+                ]
+            ]
+        ];
+        $encodedKeyboard = json_encode($keyboard);
+        $replyMarkup = '&reply_markup=' . urlencode($encodedKeyboard);
+
+        file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($joinMessage) . $replyMarkup);
     }
+} else {
+    if (isMember($chatID, $userID)) {
+        $songDetails = getSongDetails($message);
 
-    // Save the file content to the uploads directory
-    $filePath = $uploadDir . basename($fileName);
+        if ($songDetails) {
+            $songName = $songDetails['name'];
+            $artist = $songDetails['primaryArtists'];
 
-    try {
-        if (file_put_contents($filePath, $content) !== false) {
-            // Return a success response
-            echo "File successfully saved.";
-            exit;
+            $downloadUrl = $songDetails['downloadUrl'][4]['link']; 
+
+            if (strpos($downloadUrl, 'http') === 0) {
+                file_get_contents($telegramAPI . 'sendChatAction?chat_id=' . $chatID . '&action=upload_document');
+
+                $tempFilePath = 'song.mp3';
+                downloadFile($downloadUrl, $tempFilePath);
+
+                $caption = "Song: $songName\nArtist: $artist\nMusic downloaded by @NepMusicDownloderbot";
+
+                $postFields = [
+                    'chat_id' => $chatID,
+                    'document' => new CURLFile($tempFilePath),
+                    'caption' => $caption,
+                    'reply_markup' => json_encode(['inline_keyboard' => [[['text' => 'Join @devsnp', 'url' => 'https://t.me/devsnp']]]])
+                ];
+                $url = "https://api.telegram.org/bot{$GLOBALS['botToken']}/sendDocument";
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_exec($ch);
+                curl_close($ch);
+
+                unlink($tempFilePath); 
+            } else {
+                $response = "Sorry, couldn't find the song. Please try again. ";
+                file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($response));
+            }
         } else {
-            throw new Exception("Error writing file.");
+            $response = "Sorry, couldn't find the song details. Please try again. ";
+            file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($response));
         }
-    } catch (Exception $e) {
-        echo $e->getMessage();
-        http_response_code(500);
-        exit;
+    } else {
+        $joinMessage = "To access music downloads, join our channel: https://t.me/devsnp ";
+        $keyboard = [
+            'inline_keyboard' => [
+                [
+                    ['text' => 'Join @devsnp', 'url' => 'https://t.me/devsnp']
+                ]
+            ]
+        ];
+        $encodedKeyboard = json_encode($keyboard);
+        $replyMarkup = '&reply_markup=' . urlencode($encodedKeyboard);
+
+        file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($joinMessage) . $replyMarkup);
     }
 }
 
-// If not a POST request, return a 405 Method Not Allowed error
-http_response_code(405);
-echo "Method not allowed.";
+
+$webhookResponse = file_get_contents($telegramAPI . 'setWebhook?url=REPLACEWITHYOURHOSTED WEBHOOK URL'); //put your webhook url
+
+if ($webhookResponse) {
+    echo "Webhook set successfully!";
+} else {
+    echo "Error setting webhook!";
+}
 ?>
