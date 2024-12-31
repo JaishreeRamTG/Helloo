@@ -1,15 +1,14 @@
 <?php
-// Set bot token and webhook URL
-$botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0"; // Provided bot token
-$webhookUrl = "https://hello-five-flax.vercel.app"; // Provided URL
-
+// Bot Token and Webhook URL
+$botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0";
+$webhookUrl = "https://hello-five-flax.vercel.app"; // Removed '/helper.php'
 $website = "https://api.telegram.org/bot" . $botToken;
 
 // Function to send a message
 function sendMessage($chatId, $message, $replyToMessageId = null, $parseMode = null) {
     global $website;
 
-    // Prepare URL
+    // Prepare the URL
     $url = $website . "/sendMessage?chat_id=" . $chatId . "&text=" . urlencode($message);
 
     // Add optional parameters
@@ -20,7 +19,7 @@ function sendMessage($chatId, $message, $replyToMessageId = null, $parseMode = n
         $url .= "&parse_mode=" . $parseMode;
     }
 
-    // Execute the request
+    // Send the request
     file_get_contents($url);
 }
 
@@ -28,46 +27,47 @@ function sendMessage($chatId, $message, $replyToMessageId = null, $parseMode = n
 function sendInlineButton($chatId, $replyToMessageId = null) {
     global $website;
 
-    // Create inline keyboard
+    // Inline keyboard button
     $keyboard = [
         'inline_keyboard' => [[
             ['text' => '➕ Add To Group ➕', 'url' => 'https://t.me/swastikgptbot?startgroup=true']
         ]]
     ];
 
+    // Encode the keyboard as JSON
     $encodedKeyboard = json_encode($keyboard);
 
-    // Prepare URL
-    $url = $website . "/sendMessage?chat_id=" . $chatId 
-         . "&text=Click%20the%20button%20below%20to%20add%20me%20to%20a%20group."
+    // Prepare the URL
+    $url = $website . "/sendMessage?chat_id=" . $chatId
+         . "&text=" . urlencode("Click the button below to add me to a group.")
          . "&reply_markup=" . $encodedKeyboard;
 
-    // Add optional reply-to-message ID
+    // Optional reply-to-message ID
     if ($replyToMessageId) {
         $url .= "&reply_to_message_id=" . $replyToMessageId;
     }
 
-    // Execute the request
+    // Send the request
     file_get_contents($url);
 }
 
-// Log errors for debugging
+// Function to log errors for debugging
 function logError($error) {
-    // Log error messages into a file
+    // Append errors to a log file
     file_put_contents('error_log.txt', $error . PHP_EOL, FILE_APPEND);
 }
 
-// Set webhook function
+// Function to set the webhook
 function setWebhook() {
     global $website, $webhookUrl;
 
-    // Prepare URL to set webhook
+    // Prepare the URL to set webhook
     $url = $website . "/setWebhook?url=" . $webhookUrl;
 
     // Execute the request
     file_get_contents($url);
 }
 
-// Uncomment to set the webhook (Run this once and then comment it out)
+// Uncomment to set the webhook (run this once and then comment it out)
 // setWebhook();
 ?>
