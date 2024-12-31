@@ -1,106 +1,34 @@
 <?php
 // Set bot token and webhook URL
-$botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0"; // Replace with your actual bot token
-$webhookUrl = "https://hello-five-flax.vercel.app"; // Replace with your actual webhook URL
+$botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0"; // Provided bot token
+$webhookUrl = "https://hello-five-flax.vercel.app"; // Provided URL
 
 $website = "https://api.telegram.org/bot" . $botToken;
-
-// Get incoming updates from Telegram
-$update = file_get_contents("php://input");
-$update = json_decode($update, TRUE);
-
-// Log incoming updates for debugging
-file_put_contents('log.txt', print_r($update, true), FILE_APPEND);
-
-if (isset($update["message"])) {
-    $chatId = $update["message"]["chat"]["id"];
-    $message = $update["message"]["text"];
-    $messageId = $update["message"]["message_id"]; // Message ID for tagging
-    $userId = $update["message"]["from"]["id"];   // User ID
-
-    // Command: /start
-    if ($message == "/start") {
-        sendMessage($chatId, "*Hello!* This is your bot.\nClick below to add me to a group.", $messageId, "Markdown");
-        sendInlineButton($chatId, $messageId);
-    }
-
-    // Command Handlers
-    handleCommand($chatId, $message, $messageId, "/bb", "bbai");
-    handleCommand($chatId, $message, $messageId, "/tbc", "tbcai");
-    handleCommand($chatId, $message, $messageId, "/php", "phpai");
-
-    // /gf command with additional behavior
-    if (strpos($message, "/gf") === 0) {
-        $question = substr($message, 4);
-        $url = "https://telesevapi.vercel.app/chat-gpt?question=" . urlencode($question);
-
-        processApiRequest($chatId, $url, $messageId);
-    }
-
-    // /bing command
-    if (strpos($message, "/bing") === 0) {
-        $question = substr($message, 5);
-        $url = "https://lord-apis.ashlynn.workers.dev/?question=" . urlencode($question) . "&mode=Bing";
-
-        processApiRequest($chatId, $url, $messageId);
-    }
-
-    // /ask command
-    if (strpos($message, "/ask") === 0) {
-        $question = substr($message, 5);
-        $url = "https://telesevapi.vercel.app/gpt4?id=" . $userId . "&question=" . urlencode($question);
-
-        processApiRequest($chatId, $url, $messageId);
-    }
-}
-
-// Function to handle commands
-function handleCommand($chatId, $message, $messageId, $command, $type) {
-    if (strpos($message, $command) === 0) {
-        $question = substr($message, strlen($command) + 1); // Remove command prefix
-        $url = "https://teleserviceapi.vercel.app/gpt?text=" . urlencode($question) . "&type=" . $type;
-
-        processApiRequest($chatId, $url, $messageId);
-    }
-}
-
-// Process API requests
-function processApiRequest($chatId, $url, $messageId) {
-    try {
-        $response = file_get_contents($url);
-        if ($response === false) {
-            throw new Exception("Failed to fetch API response.");
-        }
-        $responseData = json_decode($response, true);
-        $answer = $responseData['message'] ?? "*Error occurred!*";
-
-        sendMessage($chatId, $answer, $messageId, "Markdown");
-    } catch (Exception $e) {
-        logError($e->getMessage());
-        sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-    }
-}
 
 // Function to send a message
 function sendMessage($chatId, $message, $replyToMessageId = null, $parseMode = null) {
     global $website;
+
+    // Prepare URL
     $url = $website . "/sendMessage?chat_id=" . $chatId . "&text=" . urlencode($message);
 
+    // Add optional parameters
     if ($replyToMessageId) {
         $url .= "&reply_to_message_id=" . $replyToMessageId;
     }
-
     if ($parseMode) {
         $url .= "&parse_mode=" . $parseMode;
     }
 
+    // Execute the request
     file_get_contents($url);
 }
 
-// Inline button function
+// Function to send an inline button
 function sendInlineButton($chatId, $replyToMessageId = null) {
     global $website;
 
+    // Create inline keyboard
     $keyboard = [
         'inline_keyboard' => [[
             ['text' => '➕ Add To Group ➕', 'url' => 'https://t.me/swastikgptbot?startgroup=true']
@@ -108,28 +36,38 @@ function sendInlineButton($chatId, $replyToMessageId = null) {
     ];
 
     $encodedKeyboard = json_encode($keyboard);
-    $url = $website . "/sendMessage?chat_id=" . $chatId . "&text=Click%20the%20button%20below%20to%20add%20me%20to%20a%20group.&reply_markup=" . $encodedKeyboard;
 
+    // Prepare URL
+    $url = $website . "/sendMessage?chat_id=" . $chatId 
+         . "&text=Click%20the%20button%20below%20to%20add%20me%20to%20a%20group."
+         . "&reply_markup=" . $encodedKeyboard;
+
+    // Add optional reply-to-message ID
     if ($replyToMessageId) {
         $url .= "&reply_to_message_id=" . $replyToMessageId;
     }
 
+    // Execute the request
     file_get_contents($url);
 }
 
 // Log errors for debugging
 function logError($error) {
+    // Log error messages into a file
     file_put_contents('error_log.txt', $error . PHP_EOL, FILE_APPEND);
 }
 
-// Set webhook
+// Set webhook function
 function setWebhook() {
     global $website, $webhookUrl;
+
+    // Prepare URL to set webhook
     $url = $website . "/setWebhook?url=" . $webhookUrl;
+
+    // Execute the request
     file_get_contents($url);
 }
 
-// Uncomment to set the webhook (run this once and then comment it out)
+// Uncomment to set the webhook (Run this once and then comment it out)
 // setWebhook();
-
 ?>
