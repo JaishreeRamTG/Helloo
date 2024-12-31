@@ -1,326 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculator</title>
-    <link rel="stylesheet" href="main.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: sans-serif;
+<?php
+// Set the uploads directory
+$uploadDir = __DIR__ . '/uploads/';
+
+// Ensure the uploads directory exists
+if (!is_dir($uploadDir)) {
+    mkdir($uploadDir, 0777, true);
+}
+
+// Check if the request method is POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Retrieve the file name and content from the POST data
+    $fileName = $_POST['fileName'] ?? '';
+    $content = $_POST['content'] ?? '';
+
+    // Ensure the file name is valid
+    if (empty($fileName) || !preg_match('/^[a-zA-Z0-9_-]+\.php$/', $fileName)) {
+        echo "Invalid file name.";
+        http_response_code(400);
+        exit;
+    }
+
+    // List of unsafe functions to check for
+    $unsafeFunctions = ['exec', 'system', 'shell_exec', 'passthru', 'eval', 'assert', 'preg_replace', 'create_function'];
+
+    // Scan the content for unsafe functions
+    foreach ($unsafeFunctions as $function) {
+        if (preg_match("/\b$function\b/i", $content)) {
+            echo "The file contains potentially unsafe PHP code and cannot be uploaded.";
+            http_response_code(400);
+            exit;
         }
+    }
 
-        .app {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
+    // Save the file content to the uploads directory
+    $filePath = $uploadDir . basename($fileName);
+
+    try {
+        if (file_put_contents($filePath, $content) !== false) {
+            // Return a success response
+            echo "File successfully saved.";
+            exit;
+        } else {
+            throw new Exception("Error writing file.");
         }
+    } catch (Exception $e) {
+        echo $e->getMessage();
+        http_response_code(500);
+        exit;
+    }
+}
 
-        .calculator {
-            background-color: #22252D;
-            width: 100%;
-            max-width: 375px;
-            min-height: 640px;
-            display: flex;
-            flex-direction: column;
-            border-radius: 1.5rem;
-            overflow: hidden;
-        }
-
-        .display {
-            min-height: 200px;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: flex-end;
-            align-items: flex-end;
-            color: white;
-            text-align: right;
-            flex: 1 1 0%;
-        }
-
-        .display .content {
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-            width: 100%;
-            max-width: 100%;
-            overflow: auto;
-        }
-
-        .display .input {
-            width: 100%;
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .display .output {
-            font-size: 3rem;
-            font-weight: 700;
-            width: 100%;
-            white-space: nowrap;
-        }
-
-        .display .operator {
-            color: #EB6666;
-        }
-
-        .display .brackets,
-        .display .percent {
-            color: #26FED7;
-        }
-
-        .keys {
-            background-color: #292D36;
-            padding: 1.5rem;
-            border-radius: 1.5rem 1.5rem 0 0;
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            grid-gap: 1rem;
-            box-shadow: 0px -2px 16px rgba(0, 0, 0, 0.2);
-        }
-
-        .keys .key {
-            position: relative;
-            cursor: pointer;
-
-            display: block;
-            height: 0;
-            padding-top: 100%;
-            background-color: #262933;
-            border-radius: 1rem;
-            transition: 0.2s;
-            user-select: none;
-        }
-
-        .keys .key span {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-
-            font-size: 2rem;
-            font-weight: 700;
-            color: #FFF;
-        }
-
-        .keys .key:hover {
-            box-shadow: inset 0px 0px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .keys .key.operator span {
-            color: #EB6666;
-        }
-
-        .keys .key.action span {
-            color: #26FED7;
-        }
-    </style>
-</head>
-<body>
-    <div class="app">
-        <div class="calculator">
-            <div class="display">
-                <div class="content">
-                    <div class="input"></div>
-                    <div class="output"></div>
-                </div>
-            </div>
-            <div class="keys">
-                <div data-key="clear" class="key action">
-                    <span>AC</span>
-                </div>
-                <div data-key="brackets" class="key action">
-                    <span>( )</span>
-                </div>
-                <div data-key="%" class="key action">
-                    <span>%</span>
-                </div>
-                <div data-key="/" class="key operator">
-                    <span>÷</span>
-                </div>
-                <div data-key="7" class="key">
-                    <span>7</span>
-                </div>
-                <div data-key="8" class="key">
-                    <span>8</span>
-                </div>
-                <div data-key="9" class="key">
-                    <span>9</span>
-                </div>
-                <div data-key="*" class="key operator">
-                    <span>x</span>
-                </div>
-                <div data-key="4" class="key">
-                    <span>4</span>
-                </div>
-                <div data-key="5" class="key">
-                    <span>5</span>
-                </div>
-                <div data-key="6" class="key">
-                    <span>6</span>
-                </div>
-                <div data-key="-" class="key operator">
-                    <span>-</span>
-                </div>
-                <div data-key="1" class="key">
-                    <span>1</span>
-                </div>
-                <div data-key="2" class="key">
-                    <span>2</span>
-                </div>
-                <div data-key="3" class="key">
-                    <span>3</span>
-                </div>
-                <div data-key="+" class="key operator">
-                    <span>+</span>
-                </div>
-                <div data-key="backspace" class="key action">
-                    <span>&lt;</span>
-                </div>
-                <div data-key="0" class="key">
-                    <span>0</span>
-                </div>
-                <div data-key="." class="key">
-                    <span>.</span>
-                </div>
-                <div data-key="=" class="key operator">
-                    <span>=</span>
-                </div>
-            </div>
-        </div>
-    </div>
-    <script src="main.js"></script>
-    <script>
-        const keys = document.querySelectorAll('.key');
-        const display_input = document.querySelector('.display .input');
-        const display_output = document.querySelector('.display .output');
-
-        let input = "";
-
-        for (let key of keys) {
-            const value = key.dataset.key;
-
-            key.addEventListener('click', () => {
-                if (value == "clear") {
-                    input = "";
-                    display_input.innerHTML = "";
-                    display_output.innerHTML = "";
-                } else if (value == "backspace") {
-                    input = input.slice(0, -1);
-                    display_input.innerHTML = CleanInput(input);
-                } else if (value == "=") {
-                    let result = eval(PerpareInput(input));
-                    display_output.innerHTML = CleanOutput(result);
-                } else if (value == "brackets") {
-                    if (
-                        input.indexOf("(") == -1 || 
-                        input.indexOf("(") != -1 && 
-                        input.indexOf(")") != -1 && 
-                        input.lastIndexOf("(") < input.lastIndexOf(")")
-                    ) {
-                        input += "(";
-                    } else if (
-                        input.indexOf("(") != -1 && 
-                        input.indexOf(")") == -1 || 
-                        input.indexOf("(") != -1 &&
-                        input.indexOf(")") != -1 &&
-                        input.lastIndexOf("(") > input.lastIndexOf(")")
-                    ) {
-                        input += ")";
-                    }
-
-                    display_input.innerHTML = CleanInput(input);
-                } else {
-                    if (ValidateInput(value)) {
-                        input += value;
-                        display_input.innerHTML = CleanInput(input);
-                    }
-                }
-            });
-        }
-
-        function CleanInput(input) {
-            let input_array = input.split("");
-            let input_array_length = input_array.length;
-
-            for (let i = 0; i < input_array_length; i++) {
-                if (input_array[i] == "*") {
-                    input_array[i] = ` <span class="operator">x</span> `;
-                } else if (input_array[i] == "/") {
-                    input_array[i] = ` <span class="operator">÷</span> `;
-                } else if (input_array[i] == "+") {
-                    input_array[i] = ` <span class="operator">+</span> `;
-                } else if (input_array[i] == "-") {
-                    input_array[i] = ` <span class="operator">-</span> `;
-                } else if (input_array[i] == "(") {
-                    input_array[i] = `<span class="brackets">(</span>`;
-                } else if (input_array[i] == ")") {
-                    input_array[i] = `<span class="brackets">)</span>`;
-                } else if (input_array[i] == "%") {
-                    input_array[i] = `<span class="percent">%</span>`;
-                }
-            }
-
-            return input_array.join("");
-        }
-
-        function CleanOutput (output) {
-            let output_string = output.toString();
-            let decimal = output_string.split(".")[1];
-            output_string = output_string.split(".")[0];
-
-            let output_array = output_string.split("");
-
-            if (output_array.length > 3) {
-                for (let i = output_array.length - 3; i > 0; i -= 3) {
-                    output_array.splice(i, 0, ",");
-                }
-            }
-
-            if (decimal) {
-                output_array.push(".");
-                output_array.push(decimal);
-            }
-
-            return output_array.join("");
-        }
-
-        function ValidateInput (value) {
-            let last_input = input.slice(-1);
-            let operators = ["+", "-", "*", "/"];
-
-            if (value == "." && last_input == ".") {
-                return false;
-            }
-
-            if (operators.includes(value)) {
-                if (operators.includes(last_input)) {
-                    return false;
-                } else {
-                    return true;
-                }
-            }
-
-            return true;
-        }
-
-        function PerpareInput (input) {
-            let input_array = input.split("");
-
-            for (let i = 0; i < input_array.length; i++) {
-                if (input_array[i] == "%") {
-                    input_array[i] = "/100";
-                }
-            }
-
-            return input_array.join("");
-        }
-    </script>
-</body>
-</html>
+// If not a POST request, return a 405 Method Not Allowed error
+http_response_code(405);
+echo "Method not allowed.";
+?>
