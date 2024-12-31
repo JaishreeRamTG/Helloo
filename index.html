@@ -88,6 +88,7 @@
       box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
       z-index: 101;
       width: 250px; /* Shortened modal width */
+      text-align: center; /* Center modal content */
     }
 
     .social-modal a {
@@ -108,20 +109,20 @@
 
     /* Close button style */
     .close-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 20px;
+      margin-top: 10px;
+      padding: 8px 15px;
+      background-color: #ff00c3;
       color: white;
-      cursor: pointer;
-      background: none;
       border: none;
-      padding: 5px;
-      transition: color 0.3s ease;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      text-transform: uppercase;
+      transition: background-color 0.3s;
     }
 
     .close-btn:hover {
-      color: #ff00c3;
+      background-color: #c300a0;
     }
   </style>
 </head>
@@ -146,23 +147,23 @@
 
   <!-- Instagram Modal -->
   <div id="instagram-modal" class="social-modal">
-    <button class="close-btn" onclick="closeModal('instagram-modal')">❌</button>
     <a href="https://www.instagram.com/mysticxditor" target="_blank">Instagram</a>
     <a href="https://www.instagram.com/mysticxditor/stories" target="_blank">Stories</a>
+    <button class="close-btn" onclick="closeModal('instagram-modal')">Close</button>
   </div>
 
   <!-- WhatsApp Modal -->
   <div id="whatsapp-modal" class="social-modal">
-    <button class="close-btn" onclick="closeModal('whatsapp-modal')">❌</button>
     <a href="https://wa.me/message/HTK2K4ZKFVQCD1" target="_blank">Chat</a>
     <a href="https://web.whatsapp.com" target="_blank">WhatsApp Web</a>
+    <button class="close-btn" onclick="closeModal('whatsapp-modal')">Close</button>
   </div>
 
   <!-- Telegram Modal -->
   <div id="telegram-modal" class="social-modal">
-    <button class="close-btn" onclick="closeModal('telegram-modal')">❌</button>
     <a href="https://t.me/mysticxditor" target="_blank">Channel</a>
     <a href="https://web.telegram.org" target="_blank">Telegram Web</a>
+    <button class="close-btn" onclick="closeModal('telegram-modal')">Close</button>
   </div>
 
   <script>
@@ -181,7 +182,7 @@
       }
     }
 
-    // Function to close the modal when clicking on ❌
+    // Function to close the modal when clicking on "Close"
     function closeModal(modalId) {
       document.getElementById(modalId).style.display = 'none';
     }
