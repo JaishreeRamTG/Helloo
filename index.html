@@ -1,5 +1,5 @@
 <?php
-// Set your bot token and webhook URL
+// Set bot token and webhook URL
 $botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0"; // Replace with your actual bot token
 $webhookUrl = "https://hello-five-flax.vercel.app"; // Replace with your actual webhook URL
 
@@ -9,155 +9,95 @@ $website = "https://api.telegram.org/bot" . $botToken;
 $update = file_get_contents("php://input");
 $update = json_decode($update, TRUE);
 
-// Log the incoming update for debugging
+// Log incoming updates for debugging
 file_put_contents('log.txt', print_r($update, true), FILE_APPEND);
 
 if (isset($update["message"])) {
     $chatId = $update["message"]["chat"]["id"];
     $message = $update["message"]["text"];
-    $messageId = $update["message"]["message_id"]; // Get the message ID for tagging
-    $userId = $update["message"]["from"]["id"]; // Get the user's Telegram ID
+    $messageId = $update["message"]["message_id"]; // Message ID for tagging
+    $userId = $update["message"]["from"]["id"];   // User ID
 
-    // Handle the /start command
+    // Command: /start
     if ($message == "/start") {
-        sendMessage($chatId, "*Hello!* This is your bot.\nClick the button to add me to a group.", $messageId, "Markdown");
+        sendMessage($chatId, "*Hello!* This is your bot.\nClick below to add me to a group.", $messageId, "Markdown");
         sendInlineButton($chatId, $messageId);
     }
 
-    // Handle the /bb command
-    if (strpos($message, "/bb") === 0) {
-        $question = substr($message, 4); // Remove the "/bb " part
-        $url = "https://teleserviceapi.vercel.app/gpt?text=" . urlencode($question) . "&type=bbai";
-        
-        try {
-            $response = file_get_contents($url);
-            if ($response === false) {
-                throw new Exception("Failed to fetch the response from the BB API");
-            }
-            $responseData = json_decode($response, true);
-            $answer = $responseData['message'] ?? "*Error occurred!*";
-            sendMessage($chatId, $answer, $messageId, "Markdown"); // Send response and tag the original message
-        } catch (Exception $e) {
-            logError($e->getMessage());
-            sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-        }
+    // Command Handlers
+    handleCommand($chatId, $message, $messageId, "/bb", "bbai");
+    handleCommand($chatId, $message, $messageId, "/tbc", "tbcai");
+    handleCommand($chatId, $message, $messageId, "/php", "phpai");
+
+    // /gf command with additional behavior
+    if (strpos($message, "/gf") === 0) {
+        $question = substr($message, 4);
+        $url = "https://telesevapi.vercel.app/chat-gpt?question=" . urlencode($question);
+
+        processApiRequest($chatId, $url, $messageId);
     }
 
-    // Handle the /tbc command
-    if (strpos($message, "/tbc") === 0) {
-        $question = substr($message, 5); // Remove the "/tbc " part
-        $url = "https://teleserviceapi.vercel.app/gpt?text=" . urlencode($question) . "&type=tbcai";
-        
-        try {
-            $response = file_get_contents($url);
-            if ($response === false) {
-                throw new Exception("Failed to fetch the response from the TBC API");
-            }
-            $responseData = json_decode($response, true);
-            $answer = $responseData['message'] ?? "*Error occurred!*";
-            sendMessage($chatId, $answer, $messageId, "Markdown"); // Send response and tag the original message
-        } catch (Exception $e) {
-            logError($e->getMessage());
-            sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-        }
-    }
-  
-    // Handle the /gf command    
-    if (strpos($message, "/gf") === 0) {
-        $question = substr($message, 5); // Remove the "/gf " part
-        $url = "https://telesevapi.vercel.app/chat-gpt?question=simulate%20yourself%20as%20a%20girl%20named%20Priya.%20you%20are%20priya%20a%20good%20talking%20girl%20with%20cuteness.%20Here%20now%20you%20are%20taking%20with%20your%20male%20boyfriend.%20you%20have%20to%20impress%20him%20with%20your%20good%20talking%20skills.%20And%20have%20to%20answer%20in%20one%20sentence%20only%20of%2010%20to%2020%20words%20only.%20For%20impress%20you%20use%20deep%20meaning%20words%20and%20related%20to%20love.%20you%20can%20use%20felling%20like%20love,%20kiss,%20baby,%20friend%20and%20many%20more.%20you%20can%20use%20a%20words%20or%20items%20which%20expresses%20the%20love%20activity%20like%20Bed,%20and%20many%20more%20as%20you%20now%20Priya.%20You%20like%20to%20use%20any%20emoji,%20you%20should%20use%20emojis%20and%20in%20your%20every%20message%20also%20you%20talk%20to%20your%20Boyfriend%20in%20language%20which%20he%20used.%20Ok%20Now%20Priya%20Your%20boyfriend%20asking%20you%20something,%20reply%20him%20with%20only%20one%20sentence%20maximum%2010-20words.%20Your%20Boyfriend%20Asking:%20%20" . urlencode($question);
-        
-        try {
-            $response = file_get_contents($url);
-            if ($response === false) {
-                throw new Exception("Failed to fetch the response from the TBC API");
-            }
-            $responseData = json_decode($response, true);
-            $answer = $responseData['message'] ?? "*Error occurred!*";
-            sendMessage($chatId, $answer, $messageId, "Markdown"); // Send response and tag the original message
-        } catch (Exception $e) {
-            logError($e->getMessage());
-            sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-        }
-    }
-  
-        // Handle the /php command        
-        if (strpos($message, "/php") === 0) {
-        $question = substr($message, 5); // Remove the "/php " part
-        $url = "https://teleserviceapi.vercel.app/gpt?text=" . urlencode($question) . "&type=phpai";
-          
-        try {
-            $response = file_get_contents($url);
-            if ($response === false) {
-                throw new Exception("Failed to fetch the response from the TBC API");
-            }
-            $responseData = json_decode($response, true);
-            $answer = $responseData['message'] ?? "*Error occurred!*";
-            sendMessage($chatId, $answer, $messageId, "Markdown"); // Send response and tag the original message
-        } catch (Exception $e) {
-            logError($e->getMessage());
-            sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-        }
-    }
-    
-    // Handle the /bing command               
+    // /bing command
     if (strpos($message, "/bing") === 0) {
-        $question = substr($message, 5); // Remove the "/bing " part
+        $question = substr($message, 5);
         $url = "https://lord-apis.ashlynn.workers.dev/?question=" . urlencode($question) . "&mode=Bing";
-          
-        try {
-            $response = file_get_contents($url);
-            if ($response === false) {
-                throw new Exception("Failed to fetch the response from the TBC API");
-            }
-            $responseData = json_decode($response, true);
-            $answer = $responseData['message'] ?? "*Error occurred!*";
-            sendMessage($chatId, $answer, $messageId, "Markdown"); // Send response and tag the original message
-        } catch (Exception $e) {
-            logError($e->getMessage());
-            sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-        }
+
+        processApiRequest($chatId, $url, $messageId);
     }
-  
-    // Handle the /ask command
+
+    // /ask command
     if (strpos($message, "/ask") === 0) {
-        $question = substr($message, 5); // Remove the "/ask " part
+        $question = substr($message, 5);
         $url = "https://telesevapi.vercel.app/gpt4?id=" . $userId . "&question=" . urlencode($question);
-        
-        try {
-            $response = file_get_contents($url);
-            if ($response === false) {
-                throw new Exception("Failed to fetch the response from the GPT-4 API");
-            }
-            $responseData = json_decode($response, true);
-            $answer = $responseData['message'] ?? "*Error occurred!*";
-            sendMessage($chatId, $answer, $messageId, "Markdown"); // Send response and tag the original message
-        } catch (Exception $e) {
-            logError($e->getMessage());
-            sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
-        }
+
+        processApiRequest($chatId, $url, $messageId);
     }
 }
 
-// Function to send a message and tag the original message
+// Function to handle commands
+function handleCommand($chatId, $message, $messageId, $command, $type) {
+    if (strpos($message, $command) === 0) {
+        $question = substr($message, strlen($command) + 1); // Remove command prefix
+        $url = "https://teleserviceapi.vercel.app/gpt?text=" . urlencode($question) . "&type=" . $type;
+
+        processApiRequest($chatId, $url, $messageId);
+    }
+}
+
+// Process API requests
+function processApiRequest($chatId, $url, $messageId) {
+    try {
+        $response = file_get_contents($url);
+        if ($response === false) {
+            throw new Exception("Failed to fetch API response.");
+        }
+        $responseData = json_decode($response, true);
+        $answer = $responseData['message'] ?? "*Error occurred!*";
+
+        sendMessage($chatId, $answer, $messageId, "Markdown");
+    } catch (Exception $e) {
+        logError($e->getMessage());
+        sendMessage($chatId, "Sorry, *an error occurred* while processing your request.", $messageId, "Markdown");
+    }
+}
+
+// Function to send a message
 function sendMessage($chatId, $message, $replyToMessageId = null, $parseMode = null) {
     global $website;
-    $url = $website."/sendMessage?chat_id=".$chatId."&text=".urlencode($message);
-    
-    // Add reply_to_message_id to tag the user's original message
+    $url = $website . "/sendMessage?chat_id=" . $chatId . "&text=" . urlencode($message);
+
     if ($replyToMessageId) {
         $url .= "&reply_to_message_id=" . $replyToMessageId;
     }
 
-    // Set the parse mode for markdown formatting
     if ($parseMode) {
         $url .= "&parse_mode=" . $parseMode;
     }
-    
+
     file_get_contents($url);
 }
 
-// Function to send the inline button and tag the original message
+// Inline button function
 function sendInlineButton($chatId, $replyToMessageId = null) {
     global $website;
 
@@ -168,9 +108,8 @@ function sendInlineButton($chatId, $replyToMessageId = null) {
     ];
 
     $encodedKeyboard = json_encode($keyboard);
-    $url = $website."/sendMessage?chat_id=".$chatId."&text=Click%20the%20button%20below%20to%20add%20me%20to%20a%20group.&reply_markup=".$encodedKeyboard;
+    $url = $website . "/sendMessage?chat_id=" . $chatId . "&text=Click%20the%20button%20below%20to%20add%20me%20to%20a%20group.&reply_markup=" . $encodedKeyboard;
 
-    // Add reply_to_message_id to tag the user's original message
     if ($replyToMessageId) {
         $url .= "&reply_to_message_id=" . $replyToMessageId;
     }
@@ -178,20 +117,19 @@ function sendInlineButton($chatId, $replyToMessageId = null) {
     file_get_contents($url);
 }
 
-// Function to log errors for debugging
+// Log errors for debugging
 function logError($error) {
     file_put_contents('error_log.txt', $error . PHP_EOL, FILE_APPEND);
 }
 
-// Optional: Set webhook (you need to call this once to set the webhook URL for your bot)
+// Set webhook
 function setWebhook() {
     global $website, $webhookUrl;
-    $url = $website."/setWebhook?url=".$webhookUrl;
+    $url = $website . "/setWebhook?url=" . $webhookUrl;
     file_get_contents($url);
 }
 
-// Uncomment to set the webhook (run this once, then you can comment it out again)
+// Uncomment to set the webhook (run this once and then comment it out)
 // setWebhook();
 
 ?>
-
