@@ -35,6 +35,18 @@
       100% { background-position: 0% 50%; }
     }
 
+    /* Centered Image */
+    .top-center-image {
+      position: absolute;
+      top: 10px; /* Adjust the top position */
+      left: 50%;
+      transform: translateX(-50%);
+      max-width: 100%; /* Make it responsive */
+      width: 400px; /* Set a max-width to prevent it from being too large */
+      height: auto;
+      z-index: 10; /* Ensure it is on top of the neon background */
+    }
+
     /* Position for buttons */
     .social-buttons {
       position: fixed;
@@ -130,6 +142,9 @@
 <body>
 
   <div class="neon-background"></div>
+
+  <!-- Image at the top-center -->
+  <img src="https://graph.org/file/75c9af1de907b9e6d8993-09449162d8e476ff44.jpg" alt="Top Center Image" class="top-center-image">
 
   <div class="social-buttons">
     <a href="javascript:void(0);" class="social-button" onclick="toggleModal('instagram-modal')">
