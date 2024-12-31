@@ -1,73 +1,29 @@
 <?php
-// Bot Token and Webhook URL
-$botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0";
-$webhookUrl = "https://hello-five-flax.vercel.app"; // Removed '/helper.php'
+// Bot Token
+$botToken = "7551722305:AAF3lo7PWWA5LuHEoh6DRNUPbk7yTgltfW0"; // Replace with your actual bot token
 $website = "https://api.telegram.org/bot" . $botToken;
 
+// Get the JSON input from Telegram
+$update = json_decode(file_get_contents("php://input"), TRUE);
+
+// Extract chat ID and message
+$chatId = $update["message"]["chat"]["id"];
+$message = $update["message"]["text"];
+
+// Check if the command is /start
+if ($message == "/start") {
+    // Send response
+    sendMessage($chatId, "Bot started.");
+}
+
 // Function to send a message
-function sendMessage($chatId, $message, $replyToMessageId = null, $parseMode = null) {
+function sendMessage($chatId, $message) {
     global $website;
 
     // Prepare the URL
     $url = $website . "/sendMessage?chat_id=" . $chatId . "&text=" . urlencode($message);
 
-    // Add optional parameters
-    if ($replyToMessageId) {
-        $url .= "&reply_to_message_id=" . $replyToMessageId;
-    }
-    if ($parseMode) {
-        $url .= "&parse_mode=" . $parseMode;
-    }
-
     // Send the request
     file_get_contents($url);
 }
-
-// Function to send an inline button
-function sendInlineButton($chatId, $replyToMessageId = null) {
-    global $website;
-
-    // Inline keyboard button
-    $keyboard = [
-        'inline_keyboard' => [[
-            ['text' => '➕ Add To Group ➕', 'url' => 'https://t.me/swastikgptbot?startgroup=true']
-        ]]
-    ];
-
-    // Encode the keyboard as JSON
-    $encodedKeyboard = json_encode($keyboard);
-
-    // Prepare the URL
-    $url = $website . "/sendMessage?chat_id=" . $chatId
-         . "&text=" . urlencode("Click the button below to add me to a group.")
-         . "&reply_markup=" . $encodedKeyboard;
-
-    // Optional reply-to-message ID
-    if ($replyToMessageId) {
-        $url .= "&reply_to_message_id=" . $replyToMessageId;
-    }
-
-    // Send the request
-    file_get_contents($url);
-}
-
-// Function to log errors for debugging
-function logError($error) {
-    // Append errors to a log file
-    file_put_contents('error_log.txt', $error . PHP_EOL, FILE_APPEND);
-}
-
-// Function to set the webhook
-function setWebhook() {
-    global $website, $webhookUrl;
-
-    // Prepare the URL to set webhook
-    $url = $website . "/setWebhook?url=" . $webhookUrl;
-
-    // Execute the request
-    file_get_contents($url);
-}
-
-// Uncomment to set the webhook (run this once and then comment it out)
-// setWebhook();
 ?>
