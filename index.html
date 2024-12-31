@@ -1,140 +1,97 @@
-<?php
-$botToken = '7551722305:AAFmA6ajU-ZWYUre7zjmm-IdxWc81JqUbbI'; 
-$telegramAPI = 'https://api.telegram.org/bot' . $botToken . '/';
-
-// note replace All My Channel Username With Yours
-
-function isMember($chatID, $user_id) {
-    global $telegramAPI;
-    $check = json_decode(file_get_contents($telegramAPI . 'getChatMember?chat_id=@devsnp&user_id=' . $user_id), true);//replace All My Channel Username With Yours
-    return ($check['ok'] && ($check['result']['status'] === 'member' || $check['result']['status'] === 'administrator' || $check['result']['status'] === 'creator'));
-}
-
-function getSongDetails($songName) {
-    $query = urlencode($songName);
-    $url = "https://music.apinepdev.workers.dev/?song=$query&page=1&limit=1";
-
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
-
-    if ($data && $data['status'] === "SUCCESS" && isset($data['data']['results'][0])) {
-        return $data['data']['results'][0];
-    } else {
-        return null;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Neon Background and Social Buttons</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Full-screen neon gradient background */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      font-family: 'Roboto', sans-serif;
     }
-}
 
-function downloadFile($url, $filePath) {
-    $file = fopen($filePath, 'w');
-    $ch = curl_init($url);
-    curl_setopt($ch, CURLOPT_FILE, $file);
-    curl_setopt($ch, CURLOPT_HEADER, 0);
-    curl_exec($ch);
-    curl_close($ch);
-    fclose($file);
-}
-
-$update = json_decode(file_get_contents('php://input'), true);
-$message = $update['message']['text'];
-$chatID = $update['message']['chat']['id'];
-$userID = $update['message']['from']['id'];
-
-if (strpos($message, '/start') !== false) {
-    if (isMember($chatID, $userID)) {
-        $response = "Welcome! Please enter the name of the song you want to download.";
-        file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($response));
-
-       
-        $usersFile = 'users.json';
-        $existingUsers = [];
-
-        if (file_exists($usersFile)) {
-            $existingUsers = json_decode(file_get_contents($usersFile), true);
-        }
-
-        if (!in_array($userID, $existingUsers)) {
-            $existingUsers[] = $userID;
-            file_put_contents($usersFile, json_encode($existingUsers));
-        }
-    } else {
-        $joinMessage = "To access music downloads, join our channel: https://t.me/devsnp ";
-        $keyboard = [
-            'inline_keyboard' => [
-                [
-                    ['text' => 'Join @devsnp', 'url' => 'https://t.me/devsnp']
-                ]
-            ]
-        ];
-        $encodedKeyboard = json_encode($keyboard);
-        $replyMarkup = '&reply_markup=' . urlencode($encodedKeyboard);
-
-        file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($joinMessage) . $replyMarkup);
+    /* Neon color-changing background */
+    .neon-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      background: linear-gradient(45deg, #ff00c3, #00c3ff, #ff00ff, #ffff00);
+      background-size: 400% 400%;
+      animation: gradientShift 5s ease infinite;
+      z-index: -1;
     }
-} else {
-    if (isMember($chatID, $userID)) {
-        $songDetails = getSongDetails($message);
 
-        if ($songDetails) {
-            $songName = $songDetails['name'];
-            $artist = $songDetails['primaryArtists'];
-
-            $downloadUrl = $songDetails['downloadUrl'][4]['link']; 
-
-            if (strpos($downloadUrl, 'http') === 0) {
-                file_get_contents($telegramAPI . 'sendChatAction?chat_id=' . $chatID . '&action=upload_document');
-
-                $tempFilePath = 'song.mp3';
-                downloadFile($downloadUrl, $tempFilePath);
-
-                $caption = "Song: $songName\nArtist: $artist\nMusic downloaded by @NepMusicDownloderbot";
-
-                $postFields = [
-                    'chat_id' => $chatID,
-                    'document' => new CURLFile($tempFilePath),
-                    'caption' => $caption,
-                    'reply_markup' => json_encode(['inline_keyboard' => [[['text' => 'Join @devsnp', 'url' => 'https://t.me/devsnp']]]])
-                ];
-                $url = "https://api.telegram.org/bot{$GLOBALS['botToken']}/sendDocument";
-
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, $postFields);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_exec($ch);
-                curl_close($ch);
-
-                unlink($tempFilePath); 
-            } else {
-                $response = "Sorry, couldn't find the song. Please try again. ";
-                file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($response));
-            }
-        } else {
-            $response = "Sorry, couldn't find the song details. Please try again. ";
-            file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($response));
-        }
-    } else {
-        $joinMessage = "To access music downloads, join our channel: https://t.me/devsnp ";
-        $keyboard = [
-            'inline_keyboard' => [
-                [
-                    ['text' => 'Join @devsnp', 'url' => 'https://t.me/devsnp']
-                ]
-            ]
-        ];
-        $encodedKeyboard = json_encode($keyboard);
-        $replyMarkup = '&reply_markup=' . urlencode($encodedKeyboard);
-
-        file_get_contents($telegramAPI . 'sendMessage?chat_id=' . $chatID . '&text=' . urlencode($joinMessage) . $replyMarkup);
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
     }
-}
 
+    /* Position for buttons */
+    .social-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 100;
+    }
 
-$webhookResponse = file_get_contents($telegramAPI . 'setWebhook?url=mysticsilence.vercel.com'); //put your webhook url
+    .social-button {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      background-color: rgba(0, 0, 0, 0.6);
+      border-radius: 30px;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background 0.3s ease;
+    }
 
-if ($webhookResponse) {
-    echo "Webhook set successfully!";
-} else {
-    echo "Error setting webhook!";
-}
-?>
+    .social-button:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .social-button img {
+      width: 35px;
+      height: 35px;
+      margin-right: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .social-button:hover img {
+      transform: scale(1.2);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="neon-background"></div>
+
+  <div class="social-buttons">
+    <a href="https://www.instagram.com" target="_blank" class="social-button">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png" alt="Instagram">
+      Instagram
+    </a>
+    <a href="https://wa.me" target="_blank" class="social-button">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+      WhatsApp
+    </a>
+    <a href="https://t.me" target="_blank" class="social-button">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/8/86/Telegram_logo.svg" alt="Telegram">
+      Telegram
+    </a>
+  </div>
+
+</body>
+</html>
