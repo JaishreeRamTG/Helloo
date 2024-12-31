@@ -103,6 +103,24 @@
     .social-modal a:hover {
       background-color: rgba(255, 255, 255, 0.2);
     }
+
+    /* Close button style */
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      color: white;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 5px;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #ff00c3;
+    }
   </style>
 </head>
 <body>
@@ -126,18 +144,21 @@
 
   <!-- Instagram Modal -->
   <div id="instagram-modal" class="social-modal">
+    <button class="close-btn" onclick="closeModal('instagram-modal')">❌</button>
     <a href="https://www.instagram.com/mysticxditor" target="_blank">Visit Instagram</a>
     <a href="https://www.instagram.com/mysticxditor/stories" target="_blank">View Stories</a>
   </div>
 
   <!-- WhatsApp Modal -->
   <div id="whatsapp-modal" class="social-modal">
+    <button class="close-btn" onclick="closeModal('whatsapp-modal')">❌</button>
     <a href="https://wa.me/message/HTK2K4ZKFVQCD1" target="_blank">Chat on WhatsApp</a>
     <a href="https://web.whatsapp.com" target="_blank">Open WhatsApp Web</a>
   </div>
 
   <!-- Telegram Modal -->
   <div id="telegram-modal" class="social-modal">
+    <button class="close-btn" onclick="closeModal('telegram-modal')">❌</button>
     <a href="https://t.me/mysticxditor" target="_blank">Visit Telegram Channel</a>
     <a href="https://web.telegram.org" target="_blank">Open Telegram Web</a>
   </div>
@@ -156,6 +177,11 @@
       } else {
         modal.style.display = 'block';
       }
+    }
+
+    // Function to close the modal when clicking on ❌
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
     }
   </script>
 
