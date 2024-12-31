@@ -1,43 +1,219 @@
-<?php
-//Source By Nep Devs join:-t.me/DEVSNP
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: GET, OPTIONS");
-header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privates Bots Media Hosting</title>
+    <style>
+        /* Body styling */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+            background: url('https://iili.io/27FUC2s.md.jpg') no-repeat center center/cover;
+            background-size: cover;
+            transition: background 2s ease-in-out; /* Smooth background transition */
+        }
 
-$api_url = 'https://api.thecatapi.com/v1/images/search';
+        /* Container styling */
+        .container {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 30px 40px;
+            text-align: center;
+            width: 350px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
+        /* Header styling */
+        h1 {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
 
-$ch = curl_init($api_url);
+        /* Paragraph styling */
+        p {
+            font-size: 1.1em;
+            color: #555;
+            margin-bottom: 20px;
+        }
 
+        /* File input styling */
+        .file-upload {
+            margin: 20px 0;
+        }
 
-//Source By Nep Devs join:-t.me/DEVSNP
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        .file-upload input[type="file"] {
+            display: none;
+        }
 
+        .file-upload label {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1.1em;
+        }
 
-$response = curl_exec($ch);
+        .file-upload label:hover {
+            background: #0056b3;
+        }
 
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            margin: 20px auto;
+            width: 30px;
+            height: 30px;
+            border: 4px solid #ccc;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
 
-curl_close($ch);
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
-//Source By Nep Devs join:-t.me/DEVSNP
-if ($response === false) {
-    die('Error: Unable to fetch data from theCatAPI');
-}
+        /* Uploaded URL styling */
+        .output {
+            margin-top: 20px;
+            color: #007bff;
+        }
 
+        /* Style for URL in the box (like chat text area) */
+        .file-url {
+            width: 100%;
+            height: 50px;
+            padding: 10px;
+            margin: 10px 0;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            font-size: 1em;
+            color: #333;
+            background-color: #f5f5f5;
+            word-wrap: break-word;
+            overflow: auto;
+            text-align: left;
+            resize: none;
+            font-family: 'Candara', sans-serif; /* Set font to Candara */
+        }
 
-$data = json_decode($response, true);
+        .copy-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin-left: 10px;
+        }
 
-//Source By Nep Devs join:-t.me/DEVSNP
-if ($data === null) {
-    die('Error: Unable to parse JSON response');
-}
+        .copy-btn img {
+            width: 20px;
+            height: 20px;
+        }
 
+    </style>
+</head>
+<body>
 
-$data['join'] = '@DEVSNP';
+    <div class="container">
+        <h1>PB Hosting</h1>
+        <p>Upload your files easily with our secure hosting platform. Select images, videos, or any type of document to get started.</p>
+        
+        <div class="file-upload">
+            <label for="fileInput">Browse...</label>
+            <input type="file" id="fileInput" multiple>
+        </div>
 
+        <div class="spinner" id="spinner"></div>
+        
+        <div id="output" class="output"></div>
+    </div>
 
-$json_output = json_encode($data);
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const spinner = document.getElementById('spinner');
+        const output = document.getElementById('output');
 
+        // Define an array of background images
+        const backgrounds = [
+            'https://iili.io/27FUC2s.md.jpg',  // First background
+            'https://i.postimg.cc/8cJ1c382/images-2.jpg',  // Second background
+            'https://i.postimg.cc/T2FdFRgf/images.jpg',  // Third background
+            'https://i.postimg.cc/HnqTy2dV/images-1.jpg'  // Fourth background
+        ];
 
-echo $json_output;
-?>
+        // Get the current background index from localStorage or default to 0
+        let currentIndex = parseInt(localStorage.getItem('backgroundIndex')) || 0;
+
+        // Function to change background dynamically
+        function changeBackground() {
+            document.body.style.backgroundImage = `url(${backgrounds[currentIndex]})`;
+            // Increment the index and reset after the 4th background
+            currentIndex = (currentIndex + 1) % backgrounds.length;
+            // Save the current index to localStorage to persist it
+            localStorage.setItem('backgroundIndex', currentIndex);
+        }
+
+        // Change background immediately when the page loads
+        window.onload = changeBackground;
+
+        fileInput.addEventListener('change', (event) => {
+            const files = event.target.files;
+            if (files.length > 0) {
+                const formData = new FormData();
+                for (let i = 0; i < files.length; i++) {
+                    formData.append('files[]', files[i]);
+                }
+
+                spinner.style.display = 'block'; // Show loading spinner
+
+                // Send the files to the backend (PHP)
+                fetch('upload.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    spinner.style.display = 'none'; // Hide spinner
+                    if (data.success) {
+                        output.innerHTML = '<p>File(s) uploaded successfully!</p>';
+                        data.files.forEach(file => {
+                            // Fix the file URL construction to avoid double '/uploads/'
+                            const filePath = `${window.location.origin}/uploads/${file.replace(/^.*[\\\/]/, '')}`;
+                            output.innerHTML += `
+                                <div>
+                                    <textarea class="file-url" readonly>${filePath}</textarea>
+                                    <button class="copy-btn" onclick="copyToClipboard('${filePath}')">
+                                        <img src="https://i.postimg.cc/W38gNdmD/copy-two-paper-sheets-interface-symbol.png" alt="Copy">
+                                    </button>
+                                </div>
+                            `;
+                        });
+                    } else {
+                        output.innerHTML = '<p>Upload failed!</p>';
+                    }
+                })
+                .catch(error => {
+                    spinner.style.display = 'none'; // Hide spinner
+                    output.innerHTML = '<p>Error during upload!</p>';
+                });
+            }
+        });
+
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text); // Copy text to clipboard
+        }
+    </script>
+
+</body>
+</html>
