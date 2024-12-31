@@ -2,218 +2,199 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privates Bots Media Hosting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Mass TempMail Generator</title>
     <style>
-        /* Body styling */
         body {
-            margin: 0;
             font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #fff;
-            background: url('https://iili.io/27FUC2s.md.jpg') no-repeat center center/cover;
+            background-image: url('http://telegra.ph/file/e7032a387a608932e09c5.jpg'); /* Add your background image URL here */
             background-size: cover;
-            transition: background 2s ease-in-out; /* Smooth background transition */
+            background-repeat: no-repeat;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
         }
 
-        /* Container styling */
         .container {
-            background: rgba(255, 255, 255, 0.9);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Add a semi-transparent white background */
             border-radius: 10px;
-            padding: 30px 40px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow-x: auto;
+        }
+
+        .header {
             text-align: center;
-            width: 350px;
-            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Header styling */
-        h1 {
-            font-size: 2em;
-            color: #333;
-            margin-bottom: 15px;
-            text-transform: uppercase;
-        }
-
-        /* Paragraph styling */
-        p {
-            font-size: 1.1em;
-            color: #555;
             margin-bottom: 20px;
         }
 
-        /* File input styling */
-        .file-upload {
-            margin: 20px 0;
-        }
-
-        .file-upload input[type="file"] {
-            display: none;
-        }
-
-        .file-upload label {
-            display: inline-block;
-            background: #007bff;
+        .banner {
+            background-color: #007bff; 
             color: white;
-            padding: 12px 25px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 1.1em;
+            padding: 5px;
         }
 
-        .file-upload label:hover {
-            background: #0056b3;
-        }
-
-        /* Loading spinner */
-        .spinner {
-            display: none;
-            margin: 20px auto;
-            width: 30px;
-            height: 30px;
-            border: 4px solid #ccc;
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
-        /* Uploaded URL styling */
-        .output {
-            margin-top: 20px;
-            color: #007bff;
-        }
-
-        /* Style for URL in the box (like chat text area) */
-        .file-url {
-            width: 100%;
-            height: 50px;
-            padding: 10px;
-            margin: 10px 0;
-            border: 2px solid #007bff;
-            border-radius: 5px;
-            font-size: 1em;
+        h1 {
             color: #333;
-            background-color: #f5f5f5;
-            word-wrap: break-word;
-            overflow: auto;
+        }
+
+        table {
+            width: 100%;
+            height: 100%;
+            border-collapse: collapse;
+            max-width: 100%;
+        }
+
+        th, td {
+            padding: 5px;
             text-align: left;
-            resize: none;
-            font-family: 'Candara', sans-serif; /* Set font to Candara */
         }
 
-        .copy-btn {
-            background: none;
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        input, button {
+            padding: 5px;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .btn-copy {
+            background-color: #007bff;
+            color: white;
             border: none;
+            padding: 3px 6px;
             cursor: pointer;
-            padding: 0;
-            margin-left: 10px;
+            display: inline-block;
+            margin-left: 5px;
         }
 
-        .copy-btn img {
-            width: 20px;
-            height: 20px;
+        footer {
+            text-align: center;
+            background-color: black;
+            color: white;
+            padding: 10px;
+            position: absolute;
+            width: 100%;
+            bottom: 0;
         }
 
+        @media screen and (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            .btn-copy {
+                padding: 2px 4px;
+            }
+        }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>PB Hosting</h1>
-        <p>Upload your files easily with our secure hosting platform. Select images, videos, or any type of document to get started.</p>
-        
-        <div class="file-upload">
-            <label for="fileInput">Browse...</label>
-            <input type="file" id="fileInput" multiple>
-        </div>
-
-        <div class="spinner" id="spinner"></div>
-        
-        <div id="output" class="output"></div>
+<div class="container">
+    <div class="banner">
+    	     <Center>
+        <h1>Mass TempMail Generator</h1>
     </div>
 
-    <script>
-        const fileInput = document.getElementById('fileInput');
-        const spinner = document.getElementById('spinner');
-        const output = document.getElementById('output');
+    <table border="1">
+        <tr>
+            <th>Login:</th>
+            <td><input type="text" id="inputMail" class="custom-search-input" placeholder="Enter your mail"></td>
+            <td colspan="3"><button id="checkButton" class="custom-search-botton btn-copy">Check</button></td>
+        </tr>
+        <tr>
+            <td colspan="5">&nbsp;</td>
+        </tr>
 
-        // Define an array of background images
-        const backgrounds = [
-            'https://iili.io/27FUC2s.md.jpg',  // First background
-            'https://i.postimg.cc/8cJ1c382/images-2.jpg',  // Second background
-            'https://i.postimg.cc/T2FdFRgf/images.jpg',  // Third background
-            'https://i.postimg.cc/HnqTy2dV/images-1.jpg'  // Fourth background
-        ];
+        <?php
+        $count = $_GET['id'];
+        $default = 0;
 
-        // Get the current background index from localStorage or default to 0
-        let currentIndex = parseInt(localStorage.getItem('backgroundIndex')) || 0;
-
-        // Function to change background dynamically
-        function changeBackground() {
-            document.body.style.backgroundImage = `url(${backgrounds[currentIndex]})`;
-            // Increment the index and reset after the 4th background
-            currentIndex = (currentIndex + 1) % backgrounds.length;
-            // Save the current index to localStorage to persist it
-            localStorage.setItem('backgroundIndex', currentIndex);
+        if (!empty($count)) {
+            $default = 0 + $count;
         }
 
-        // Change background immediately when the page loads
-        window.onload = changeBackground;
+        if (!empty($count)) {
 
-        fileInput.addEventListener('change', (event) => {
-            const files = event.target.files;
-            if (files.length > 0) {
-                const formData = new FormData();
-                for (let i = 0; i < files.length; i++) {
-                    formData.append('files[]', files[i]);
-                }
+            $url = "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=$count";
+            $json = file_get_contents($url);
+            $data = json_decode($json, true);
 
-                spinner.style.display = 'block'; // Show loading spinner
+        } else if ($count == NULL) {
+            $count = 1;
+            $url = "https://www.1secmail.com/api/v1/?action=genRandomMailbox&count=$count";
+            $json = file_get_contents($url);
+            $data = json_decode($json, true);
 
-                // Send the files to the backend (PHP)
-                fetch('upload.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    spinner.style.display = 'none'; // Hide spinner
-                    if (data.success) {
-                        output.innerHTML = '<p>File(s) uploaded successfully!</p>';
-                        data.files.forEach(file => {
-                            // Fix the file URL construction to avoid double '/uploads/'
-                            const filePath = `${window.location.origin}/uploads/${file.replace(/^.*[\\\/]/, '')}`;
-                            output.innerHTML += `
-                                <div>
-                                    <textarea class="file-url" readonly>${filePath}</textarea>
-                                    <button class="copy-btn" onclick="copyToClipboard('${filePath}')">
-                                        <img src="https://i.postimg.cc/W38gNdmD/copy-two-paper-sheets-interface-symbol.png" alt="Copy">
-                                    </button>
-                                </div>
-                            `;
-                        });
-                    } else {
-                        output.innerHTML = '<p>Upload failed!</p>';
-                    }
-                })
-                .catch(error => {
-                    spinner.style.display = 'none'; // Hide spinner
-                    output.innerHTML = '<p>Error during upload!</p>';
-                });
-            }
-        });
-
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text); // Copy text to clipboard
         }
-    </script>
+
+        for ($i = 0; $i < $count; $i++) {
+            echo '<tr>';
+            echo '<th>Email:</th>';
+            echo '<td id="email-' . $i . '">' . $data[$i] . '</td>';
+            echo '<td><button class="btn-copy" data-clipboard-target="#email-' . $i . '">Copy</button></td>';
+            echo '<td><a href="./view.php?id=' . $data[$i] . '" target="_blank"><button class="btn-copy">Check Mail</button></a></td>';
+            echo '</tr>';
+        }
+        ?>
+
+        <tr>
+            <th>Mass:</th>
+            <td><input type="text" id="inMail" class="custom-search-input" placeholder="Example: 10"></td>
+            <td colspan="3"><button id="genMail" class="custom-search-botton btn-copy">Generate</button></td>
+        </tr>
+    </table>
+</div>
+
+<footer>
+    <div style="text-align: center;">
+        <a href="https://t.me/DEVSNP" target="_blank">
+            <button style="background-color: #007bff; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;">
+                Made by Nepcoder💌
+            </button>
+        </a>
+    </div>
+</footer>
+
+
+<audio id="myAudio">
+    <source src="./sound/copy.mp3" type="audio/mpeg">
+</audio>
+
+<script src="https://cdn.jsdelivr.net/npm/clipboard@2/dist/clipboard.min.js"></script>
+<script>
+    var audio = document.getElementById("myAudio");
+
+    document.getElementById('checkButton').onclick = function() {
+        window.location = "./view.php?id=" + document.getElementById('inputMail').value;
+        return false;
+    }
+
+    document.getElementById('genMail').onclick = function() {
+        window.location = "./?id=" + document.getElementById('inMail').value;
+        return false;
+    }
+
+    var clipboard = new ClipboardJS(".btn-copy");
+    clipboard.on("success", function(e) {
+        audio.play();
+        e.clearSelection();
+    });
+</script>
 
 </body>
 </html>
