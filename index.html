@@ -35,16 +35,15 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Centered Image */
+    /* Large image at top center */
     .top-center-image {
+      width: 100%; /* Full width */
+      height: 300px; /* Adjust the height to be large */
+      object-fit: cover; /* Ensure the image covers the area */
       position: absolute;
-      top: 10px; /* Adjust the top position */
-      left: 50%;
-      transform: translateX(-50%);
-      max-width: 100%; /* Make it responsive */
-      width: 400px; /* Set a max-width to prevent it from being too large */
-      height: auto;
-      z-index: 10; /* Ensure it is on top of the neon background */
+      top: 0;
+      left: 0;
+      z-index: 10; /* Keep image on top of the background */
     }
 
     /* Position for buttons */
@@ -143,7 +142,7 @@
 
   <div class="neon-background"></div>
 
-  <!-- Image at the top-center -->
+  <!-- Large Image at the Top Center -->
   <img src="https://graph.org/file/75c9af1de907b9e6d8993-09449162d8e476ff44.jpg" alt="Top Center Image" class="top-center-image">
 
   <div class="social-buttons">
