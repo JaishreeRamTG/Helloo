@@ -1,193 +1,171 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Neon Background and Social Buttons</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
-  <style>
-    /* Full-screen neon gradient background */
-    body, html {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      font-family: 'Roboto', sans-serif;
-    }
+    <title>Cheap Hosting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">  
+    <meta name="description" content="Html Hoster">   
+    <style>
+body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+        }
+        .banner {
+            text-align: center;
+            background-color: #e74c3c; 
+            color: white;
+            padding: 20px 0;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .banner span {
+            display: block;
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        .container {
+            max-width: 90%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd; 
+            position: relative;
+        }
+        input[type="file"], input[type="submit"] {
+            margin-bottom: 15px;
+            padding: 12px;
+            width: calc(100% - 24px);
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        input[type="submit"] {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 4px;
+            padding: 12px 20px;
+            width: 100%;
+            display: block;
+        }
+        input[type="submit"]:hover {
+            background-color: #c0392b; 
+        }
 
-    /* Neon color-changing background */
-    .neon-background {
-      position: absolute;
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: 100%;
-      background: linear-gradient(45deg, #ff00c3, #00c3ff, #ff00ff, #ffff00);
-      background-size: 400% 400%;
-      animation: gradientShift 5s ease infinite;
-      z-index: -1;
-    }
 
-    @keyframes gradientShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
+        .watermark {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 12px;
+            color: #ccc;
+        }
 
-    /* Position for buttons */
-    .social-buttons {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 100;
-    }
 
-    .social-button {
-      display: flex;
-      align-items: center;
-      padding: 10px;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 30px;
-      color: #fff;
-      text-decoration: none;
-      font-weight: 500;
-      transition: background 0.3s ease;
-      max-width: 180px;
-      justify-content: center;
-    }
+        .hosted-url-box {
+            padding: 10px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-top: 20px;
+            word-wrap: break-word; 
+            max-width: 90%; 
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .custom-btn {
+    background-color: #3498db; 
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 10px;
+    text-align: center; 
+}
 
-    .social-button:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
 
-    .social-button img {
-      width: 30px;
-      height: 30px;
-      margin-right: 8px;
-      transition: transform 0.3s ease;
-    }
+@media (max-width: 600px) {
+    .custom-btn {
 
-    .social-button:hover img {
-      transform: scale(1.2);
+        width: 100%;
+        z-index: 9999;
     }
+}
 
-    /* Modal content */
-    .social-modal {
-      display: none;
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      padding: 20px;
-      background-color: rgba(0, 0, 0, 0.8);
-      border-radius: 10px;
-      color: white;
-      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
-      z-index: 101;
-      width: 250px; /* Shortened modal width */
-      text-align: center; /* Center modal content */
-    }
 
-    .social-modal a {
-      display: block;
-      padding: 8px;
-      color: #fff;
-      text-decoration: none;
-      margin-bottom: 8px;
-      background-color: rgba(0, 0, 0, 0.6);
-      border-radius: 5px;
-      text-align: center;
-      transition: background 0.3s;
-    }
+        @media (max-width: 600px) {
 
-    .social-modal a:hover {
-      background-color: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Close button style */
-    .close-btn {
-      margin-top: 10px;
-      padding: 8px 15px;
-      background-color: #ff00c3;
-      color: white;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: bold;
-      text-transform: uppercase;
-      transition: background-color 0.3s;
-    }
-
-    .close-btn:hover {
-      background-color: #c300a0;
-    }
-  </style>
+            .container {
+                padding: 15px;
+            }
+            input[type="file"], input[type="submit"] {
+                padding: 10px;
+            }
+            .banner {
+                font-size: 18px;
+            }
+            .banner span {
+                font-size: 14px;
+            }
+            .watermark {
+                font-size: 10px;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="banner">
+        <h1>Cheap Hosting</h1>
+        <span>Your solution for affordable hosting</span>
+    </div>
+    <div class="container">
+        <form method="post" enctype="multipart/form-data">
+            <input type="file" name="uploadedFile">
+            <input type="submit" value="Upload">
+        </form>
 
-  <div class="neon-background"></div>
+    <?php
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['uploadedFile'])) {
+    $uploadDir = 'uploads/';
+    $allowedExtension = 'html';
 
-  <div class="social-buttons">
-    <a href="javascript:void(0);" class="social-button" onclick="toggleModal('instagram-modal')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Instagram_icon.png/1024px-Instagram_icon.png" alt="Instagram">
-      Instagram
-    </a>
-    <a href="javascript:void(0);" class="social-button" onclick="toggleModal('whatsapp-modal')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
-      WhatsApp
-    </a>
-    <a href="javascript:void(0);" class="social-button" onclick="toggleModal('telegram-modal')">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Telegram_logo.svg/1200px-Telegram_logo.svg.png" alt="Telegram">
-      Telegram
-    </a>
-  </div>
+    $fileExtension = pathinfo($_FILES['uploadedFile']['name'], PATHINFO_EXTENSION);
 
-  <!-- Instagram Modal -->
-  <div id="instagram-modal" class="social-modal">
-    <a href="https://www.instagram.com/mysticxditor" target="_blank">Instagram</a>
-    <a href="https://www.instagram.com/mysticxditor/stories" target="_blank">Stories</a>
-    <button class="close-btn" onclick="closeModal('instagram-modal')">Close</button>
-  </div>
+    if (strtolower($fileExtension) !== $allowedExtension) {
+        echo "<div>Error: Only HTML files are allowed.</div>";
+    } else {
+        if (!file_exists($uploadDir) && !is_dir($uploadDir)) {
+            mkdir($uploadDir);
+        }
 
-  <!-- WhatsApp Modal -->
-  <div id="whatsapp-modal" class="social-modal">
-    <a href="https://wa.me/message/HTK2K4ZKFVQCD1" target="_blank">Chat</a>
-    <a href="https://web.whatsapp.com" target="_blank">WhatsApp Web</a>
-    <button class="close-btn" onclick="closeModal('whatsapp-modal')">Close</button>
-  </div>
+        $uploadedFile = $uploadDir . basename($_FILES['uploadedFile']['name']);
 
-  <!-- Telegram Modal -->
-  <div id="telegram-modal" class="social-modal">
-    <a href="https://t.me/mysticxditor" target="_blank">Channel</a>
-    <a href="https://web.telegram.org" target="_blank">Telegram Web</a>
-    <button class="close-btn" onclick="closeModal('telegram-modal')">Close</button>
-  </div>
-
-  <script>
-    // Function to toggle the visibility of the modal
-    function toggleModal(modalId) {
-      var modal = document.getElementById(modalId);
-      // Hide all modals first
-      document.querySelectorAll('.social-modal').forEach(function(modal) {
-        modal.style.display = 'none';
-      });
-      // Toggle the selected modal
-      if (modal.style.display === 'block') {
-        modal.style.display = 'none';
-      } else {
-        modal.style.display = 'block';
-      }
+        if (move_uploaded_file($_FILES['uploadedFile']['tmp_name'], $uploadedFile)) {
+            $fileName = basename($_FILES['uploadedFile']['name']);
+            $hostedURL = "http://{$_SERVER['HTTP_HOST']}/$uploadedFile";
+            echo "<div class='hosted-url-box'>File uploaded successfully. Hosted URL: <a href='$hostedURL'>$hostedURL</a></div>";
+        } else {
+            echo "<div>Error uploading file.</div>";
+        }
     }
+}
+?>
 
-    // Function to close the modal when clicking on "Close"
-    function closeModal(modalId) {
-      document.getElementById(modalId).style.display = 'none';
-    }
-  </script>
-
+        <div class="watermark">Hosted on: <?php echo $_SERVER['HTTP_HOST']; ?></div>
+    </div>
+    <center>
+        <a href="https://t.me/DEVSNP">
+            <button class="btn-11 custom-btn" style="width: 40vw; height: 40px; margin-top: 10px;"><b style="color: white;">Made by Nep Coder</b></button>
+        </a>
+    </center>
 </body>
 </html>
